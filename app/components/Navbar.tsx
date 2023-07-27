@@ -34,14 +34,13 @@ const {
     autoConnect,
     disconnect,
 
+    useChainId,
     useIsConnecting,
     useIsConnected,
 
     useAccount,
-    useChainId,
-
     useBalance,
-    useEnsNames,
+    useEnsName,
 
     connectAsCurrentWallet,
 } = currentWallet;
@@ -82,7 +81,7 @@ export function Navbar() {
     const isConnected = useIsConnected();
     const chainId = useChainId();
     const account = useAccount();
-    const ensNames = useEnsNames(getNetwork(chainId));
+    const ensName = useEnsName(getNetwork(chainId));
     const balance = useBalance();
 
     useEffect(() => {
