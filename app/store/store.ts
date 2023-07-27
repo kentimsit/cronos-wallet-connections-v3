@@ -35,12 +35,13 @@ const useStore = create<IState>()(
             },
             setReadData: (readData: IReadData) => set({ readData }),
             lastTransactionHash: "",
-            setLastTransactionHash: (lastTransactionHash: string) => set({ lastTransactionHash }),
+            setLastTransactionHash: (lastTransactionHash: string) =>
+                set({ lastTransactionHash }),
         }),
         {
             name: "app-storage-wefwe", // name of the item in the storage (must be unique)
-        }
-    )
+        },
+    ),
 );
 
 export default useStore;
