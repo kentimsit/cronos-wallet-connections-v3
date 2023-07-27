@@ -1,0 +1,43 @@
+{
+    "name": "cronos-wallet-connections",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "dev": "next dev -p 3000",
+        "build": "next build",
+        "start": "next start",
+        "lint": "next lint"
+    },
+    "dependencies": {
+        "@chakra-ui/icons": "^2.1.0",
+        "@chakra-ui/next-js": "^2.1.5",
+        "@chakra-ui/react": "^2.8.0",
+        "@emotion/react": "^11.11.1",
+        "@emotion/styled": "^11.11.0",
+        "@types/node": "20.4.5",
+        "@types/react": "18.2.16",
+        "@types/react-dom": "18.2.7",
+        "@web3-wallet/defiwallet": "^2.4.1",
+        "@web3-wallet/detect-provider": "^2.4.1",
+        "@web3-wallet/metamask": "^2.4.1",
+        "@web3-wallet/react": "^2.4.1",
+        "@web3-wallet/trust-wallet": "^2.4.1",
+        "@web3-wallet/walletconnect": "^3.0.1",
+        "@web3modal/ethereum": "^2.7.0",
+        "@web3modal/react": "^2.7.0",
+        "autoprefixer": "10.4.14",
+        "eslint": "8.45.0",
+        "eslint-config-next": "13.4.12",
+        "ethers": "^6.6.5",
+        "framer-motion": "^10.13.1",
+        "next": "13.4.12",
+        "next-auth": "^4.22.3",
+        "pino-pretty": "^10.2.0",
+        "postcss": "8.4.27",
+        "react": "18.2.0",
+        "react-dom": "18.2.0",
+        "tailwindcss": "3.3.3",
+        "typescript": "5.1.6",
+        "zustand": "^4.3.9"
+    }
+}
