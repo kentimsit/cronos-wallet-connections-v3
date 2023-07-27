@@ -8,10 +8,10 @@ import { Flex, Stack, Text, Box, Button } from "@chakra-ui/react";
 
 export default function ProtectedPage() {
     const [mounted, setMounted] = React.useState(false);
-    
+
     React.useEffect(() => setMounted(true), []);
     if (!mounted) return <></>;
-    
+
     const handleSignout = async () => {
         signOut({ callbackUrl: "/" });
     };

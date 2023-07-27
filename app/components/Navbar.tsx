@@ -31,21 +31,19 @@ import type { WalletName } from "@web3-wallet/react";
 
 const {
     useWalletName,
-
-    connect,
     autoConnect,
     disconnect,
 
     useIsConnecting,
     useIsConnected,
 
-    useAccounts,
+    useAccount,
     useChainId,
 
-    useBalances,
+    useBalance,
     useEnsNames,
 
-    switchCurrentWallet,
+    connectAsCurrentWallet,
 } = currentWallet;
 
 const shortenAddress = (address: string): string => {
@@ -73,7 +71,7 @@ const shortenAddress = (address: string): string => {
     );
 };
 
-export function Navbar () {
+export function Navbar() {
     const context = useStore((state) => state.context);
     const loading = useStore((state) => state.loading);
     const [error, setError] = useState<null | string>(null);
@@ -83,33 +81,28 @@ export function Navbar () {
     const isConnecting = useIsConnecting();
     const isConnected = useIsConnected();
     const chainId = useChainId();
-    const accounts = useAccounts();
+    const account = useAccount();
     const ensNames = useEnsNames(getNetwork(chainId));
-    const balances = useBalances();
-
-    const setChain = useCallback(() => {
-        connect(getAddChainParameters(25));
-    }, []);
+    const balance = useBalance();
 
     useEffect(() => {
         autoConnect();
-        setChain();
-    }, [walletName, setChain]);
+    }, []);
 
     React.useEffect(() => setMounted(true), []);
 
-    const changeWallet = useCallback((newWalletName: WalletName) => {
-            switchCurrentWallet(newWalletName);
-                setChain();
-                onClose();
+    const changeWallet = useCallback(
+        (newWalletName: WalletName) => {
+            connectAsCurrentWallet(newWalletName, getAddChainParameters(25));
+            onClose();
         },
-        [setChain, onClose]
+        [onClose],
     );
 
     const LoginButtonComponent = () => {
         let text = "Log in";
-        if (isConnected && accounts) {
-            text = shortenAddress(accounts[0]);
+        if (isConnected && account) {
+            text = shortenAddress(account);
         }
         return (
             <Button
@@ -282,4 +275,4 @@ export function Navbar () {
             <ModalComponent />
         </div>
     );
-};
+}
