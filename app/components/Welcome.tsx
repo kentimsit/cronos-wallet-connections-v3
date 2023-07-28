@@ -4,13 +4,12 @@ import useStore from "@/app/store/store";
 import { Box, Image, Text, VStack } from "@chakra-ui/react";
 
 import { getNetwork } from "@/app/chains";
-import { currentWallet} from "@/app/wallets";
+import { currentWallet } from "@/app/wallets";
 import { ReadChain } from "./ReadChain";
 import { WriteChain } from "./WriteChain";
 
 const {
     useWalletName,
-
     connect,
     autoConnect,
     disconnect,
@@ -18,25 +17,22 @@ const {
     useIsConnecting,
     useIsConnected,
 
-    useAccounts,
+    useAccount,
     useChainId,
-
-    useBalances,
-    useEnsNames,
-
-    switchCurrentWallet,
+    useBalance,
+    useEnsName,
 } = currentWallet;
 
-export function Welcome (){
+export function Welcome() {
     const context = useStore((state) => state.context);
     const loading = useStore((state) => state.loading);
     const [mounted, setMounted] = React.useState(false);
     const walletName = useWalletName();
     const isConnected = useIsConnected();
     const chainId = useChainId();
-    const accounts = useAccounts();
-    const ensNames = useEnsNames(getNetwork(chainId));
-    const balances = useBalances();
+    const account = useAccount();
+    const ensName = useEnsName(getNetwork(chainId));
+    const balance = useBalance();
 
     React.useEffect(() => setMounted(true), []);
     if (!mounted) return <></>;
@@ -54,37 +50,37 @@ export function Welcome (){
     };
 
     const WalletComponent = () => {
-        if (isConnected && accounts && balances) {
+        if (isConnected && account && balance) {
             return (
                 <VStack spacing={3} align="left">
-                    <Text fontSize="xl" color="black" align="left" >
+                    <Text fontSize="xl" color="black" align="left">
                         Wallet connected: {walletName}
                     </Text>
-                    <Text fontSize="xl" color="black" align="left" >
+                    <Text fontSize="xl" color="black" align="left">
                         Chain ID: {chainId}
                     </Text>
-                    <Text fontSize="xl" color="black" align="left" >
-                        Wallet address: {accounts[0]}
+                    <Text fontSize="xl" color="black" align="left">
+                        Wallet address: {account} {ensName ?? `(${ensName})`}
                     </Text>
                 </VStack>
             );
         } else {
-            return(
+            return (
                 <VStack spacing={3} align="left">
-                <Text fontSize="xl" color="black" align="left" >
-                    No wallet information yet.
-                </Text>
-                <Text fontSize="xl" color="black" align="left" >
-                    Please log in.
-                </Text>
-            </VStack>
-            )
+                    <Text fontSize="xl" color="black" align="left">
+                        No wallet information yet.
+                    </Text>
+                    <Text fontSize="xl" color="black" align="left">
+                        Please log in.
+                    </Text>
+                </VStack>
+            );
         }
     };
 
     return (
         <div>
-            <Box  m={5}>
+            <Box m={5}>
                 <Text fontSize="4xl" color="black">
                     Web3 Wallet Connection Demo
                 </Text>
@@ -95,9 +91,9 @@ export function Welcome (){
             <Box w="100%" m={5}>
                 <ReadChain />
             </Box>
-            <Box  m={5}>
+            <Box m={5}>
                 <WriteChain />
             </Box>
         </div>
     );
-};
+}
