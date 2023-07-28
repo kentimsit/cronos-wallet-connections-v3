@@ -30,7 +30,10 @@ export const chainConfigs: AddEthereumChainParameter[] = [
             symbol: "CRO",
             decimals: 18,
         },
-        rpcUrls: ["https://evm.crypto.org"],
+        rpcUrls: [
+            "https://mainnet.cronoslabs.com/v1/ea0f1c40f912a166bf1224fedd07b442",
+        ],
+        // rpcUrls: ["https://evm.crypto.org"],
         blockExplorerUrls: ["https://cronoscan.com/"],
     },
     {

@@ -18,7 +18,6 @@
         "@types/react": "18.2.16",
         "@types/react-dom": "18.2.7",
         "@web3-wallet/defiwallet": "^2.4.1",
-        "@web3-wallet/detect-provider": "^2.4.1",
         "@web3-wallet/metamask": "^2.4.1",
         "@web3-wallet/react": "^2.4.1",
         "@web3-wallet/trust-wallet": "^2.4.1",

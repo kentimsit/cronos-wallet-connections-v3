@@ -1,32 +1,53 @@
 "use client";
 import { ethers } from "ethers";
-import { Text, Button, Link, VStack, Box } from "@chakra-ui/react";
+import { Text, Button, Link, VStack, Box, useToast } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import useStore from "@/app/store/store";
 import { currentWallet } from "../wallets";
-import { detectProvider } from "@web3-wallet/detect-provider";
+import { useState } from "react";
 
-const { useIsConnected, useAccounts, useProvider } = currentWallet;
+const { useIsConnected, useAccount, useProvider } = currentWallet;
 
 export function WriteChain() {
     const lastTransactionHash = useStore((state) => state.lastTransactionHash);
     const lastTransactionHashAction = useStore(
-        (state) => state.setLastTransactionHash
+        (state) => state.setLastTransactionHash,
     );
     const isConnected = useIsConnected();
-    const accounts = useAccounts();
+    const account = useAccount();
     const web3Provider = useProvider();
+    const [isLoading, setIsLoading] = useState(false);
+    const toast = useToast();
 
     const handleTransaction = async () => {
-        const hasProvider = await detectProvider();
-
-        if (isConnected && accounts && hasProvider && web3Provider) {
+        if (isConnected && account && web3Provider) {
             const signer = web3Provider.getSigner();
-            const transaction = await signer.sendTransaction({
-                to: accounts[0],
-                value: ethers.parseEther("1"),
-            });
-            lastTransactionHashAction(transaction.hash);
+            try {
+                setIsLoading(true);
+
+                const txResponse = await signer.sendTransaction({
+                    to: account,
+                    value: ethers.parseEther("1"),
+                });
+
+                const receipt = await txResponse.wait();
+
+                toast({
+                    position: "top",
+                    status: "success",
+                    description: "You just sent 1 CRO to yourself",
+                });
+
+                lastTransactionHashAction(receipt.transactionHash);
+            } catch (e: unknown) {
+                toast({
+                    position: "top",
+                    status: "error",
+                    description: (e as Error).message ?? "Transaction failed",
+                });
+            } finally {
+                setIsLoading(false);
+            }
         }
     };
 
@@ -42,14 +63,13 @@ export function WriteChain() {
         }
     };
 
-    if (isConnected && accounts) {
+    if (isConnected) {
         return (
             <Box>
                 <Box my={3}>
                     <Button
-                        onClick={() => {
-                            handleTransaction();
-                        }}
+                        isLoading={isLoading}
+                        onClick={handleTransaction}
                         bg={"blue.400"}
                         color={"white"}
                         _hover={{
