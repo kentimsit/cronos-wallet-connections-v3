@@ -71,9 +71,6 @@ const shortenAddress = (address: string): string => {
 };
 
 export function Navbar() {
-    const context = useStore((state) => state.context);
-    const loading = useStore((state) => state.loading);
-    const [error, setError] = useState<null | string>(null);
     const [mounted, setMounted] = React.useState(false);
     const { isOpen, onOpen, onClose } = useDisclosure();
     const walletName = useWalletName();

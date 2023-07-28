@@ -4,50 +4,48 @@ import { VStack, Text } from "@chakra-ui/react";
 import useStore from "@/app/store/store";
 import { useEffect } from "react";
 import { currentWallet } from "../wallets";
+import crc20Abi from '@/contract_abi/crc20_abi.json';
 
-const { useIsConnected, useAccounts } = currentWallet;
 
-const erc20ABI = [
-    {
-        inputs: [{ internalType: "address", name: "", type: "address" }],
-        name: "balanceOf",
-        outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-        stateMutability: "view",
-        type: "function",
-    },
-];
+const { useIsConnected, useAccount } = currentWallet;
+
 
 function parseAndRoundDecimal(decimalString: string) {
     let number = parseFloat(decimalString);
     if (isNaN(number)) {
-        return '0.00';
+        return "0.00";
     }
     return number.toFixed(2);
 }
-
 
 export function ReadChain() {
     const readData = useStore((state) => state.readData);
     const readDataAction = useStore((state) => state.setReadData);
     const isConnected = useIsConnected();
-    const accounts = useAccounts();
+    const account = useAccount();
 
     useEffect(() => {
         async function getReadData() {
-            if (isConnected && accounts) {
-                const backendBlockchainProvider = new ethers.JsonRpcProvider(
-                    process.env.NEXT_PUBLIC_BLOCKCHAIN_URL as string
-                )
+            if (isConnected && account) {
+                const backendBlockchainProvider = new ethers.providers.JsonRpcProvider(
+                    process.env.NEXT_PUBLIC_BLOCKCHAIN_URL as string,
+                );
                 const blockNumber =
                     await backendBlockchainProvider.getBlockNumber();
                 const croBalanceBN = await backendBlockchainProvider.getBalance(
-                    accounts[0]
+                    account,
                 );
-                const croBalance = ethers.formatEther(croBalanceBN.toString());
-                const usdcContract = new ethers.Contract("0xc21223249CA28397B4B6541dfFaEcC539BfF0c59", erc20ABI, backendBlockchainProvider)
-                const usdcBalanceBN =
-                    await usdcContract.balanceOf(accounts[0]);
-                const usdcBalance = ethers.formatUnits(usdcBalanceBN.toString(), 6);
+                const croBalance = ethers.utils.formatEther(croBalanceBN.toString());
+                const usdcContract = new ethers.Contract(
+                    "0xc21223249CA28397B4B6541dfFaEcC539BfF0c59",
+                    crc20Abi,
+                    backendBlockchainProvider,
+                );
+                const usdcBalanceBN = await usdcContract.balanceOf(account);
+                const usdcBalance = ethers.utils.formatUnits(
+                    usdcBalanceBN.toString(),
+                    6,
+                );
                 const newReadData = {
                     dataFetched: true,
                     blockNumber: blockNumber,
@@ -58,7 +56,7 @@ export function ReadChain() {
             }
         }
         getReadData();
-    }, [isConnected, accounts, readDataAction]);
+    }, [isConnected, account, readDataAction]);
 
     if (readData.dataFetched) {
         return (

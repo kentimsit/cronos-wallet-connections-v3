@@ -33,7 +33,7 @@ Then, install and configure:
 
 -   [Chakra UI](https://chakra-ui.com/getting-started/nextjs-guide)
 -   [Zustand for state management](https://github.com/pmndrs/zustand)
--   [Ethers.js] (https://docs.ethers.org/)
+-   [Ethers.js] (https://docs.ethers.org/). Here we are using v5 (5.7.2), as V6 is introducing some breaking changes that are not yet fully supported by all libraries.
 -   [Web3 Wallet](https://web3-wallet.github.io/web3-wallet/docs/getting-started)
 
 Then, create or update the /app directory.
@@ -69,7 +69,7 @@ This repository uses Cronos mainnet, and demonstrates the use of Web3-Wallet wit
 -   If you need to read data from the blockchain, you also need to enter a blockchain URL which is going to support your rate of requests in the .env file, under `NEXT_PUBLIC_BLOCKCHAIN_URL`.
 -   The `./app/components/Navbar` demonstrates how the app manages the user's connection to their preferred wallet using a basic Modal interface (in this example, Crypto.com DeFi Wallet, Rabby / MetaMask, Trust Wallet, and Wallet Connect).
 -   The `./app/components/ReadChain` demonstrates how to read information from the Cronos blockchain, such as the latest block number and the crypto asset balance of a user.
--   The `./app/components/WriteChain` demonstrates how to send a transaction to the Cronos blockchain.
+-   The `./app/components/WriteChain` demonstrates how to send a transaction to the Cronos blockchain (there are two examples: "send 1 CRO to myself" and "send 1 USDC to myself").
 
 ## Work in process
 

@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
-import useStore from "@/app/store/store";
-import { Box, Image, Text, VStack } from "@chakra-ui/react";
+import { Box, Text, VStack } from "@chakra-ui/react";
 
 import { getNetwork } from "@/app/chains";
 import { currentWallet } from "@/app/wallets";
@@ -24,8 +23,6 @@ const {
 } = currentWallet;
 
 export function Welcome() {
-    const context = useStore((state) => state.context);
-    const loading = useStore((state) => state.loading);
     const [mounted, setMounted] = React.useState(false);
     const walletName = useWalletName();
     const isConnected = useIsConnected();
@@ -37,20 +34,10 @@ export function Welcome() {
     React.useEffect(() => setMounted(true), []);
     if (!mounted) return <></>;
 
-    const LoadingComponent = () => {
-        if (loading) {
-            return (
-                <Box boxSize="100px">
-                    <Image src="loading.gif" alt="Loading" />
-                </Box>
-            );
-        } else {
-            return null;
-        }
-    };
-
     const WalletComponent = () => {
         if (isConnected && account && balance) {
+            let ensNameText = ensName ? `(${ensName})` : "";
+            if (ensNameText === "undefined") ensNameText = "";
             return (
                 <VStack spacing={3} align="left">
                     <Text fontSize="xl" color="black" align="left">
@@ -60,7 +47,7 @@ export function Welcome() {
                         Chain ID: {chainId}
                     </Text>
                     <Text fontSize="xl" color="black" align="left">
-                        Wallet address: {account} {ensName ?? `(${ensName})`}
+                        Wallet address: {account} {ensNameText}
                     </Text>
                 </VStack>
             );
