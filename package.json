@@ -6,7 +6,8 @@
         "dev": "next dev -p 3000",
         "build": "next build",
         "start": "next start",
-        "lint": "next lint"
+        "lint": "next lint",
+        "typechain": "typechain --out-dir contracts/types --target ethers-v5 'contracts/abis/*.json'"
     },
     "dependencies": {
         "@chakra-ui/icons": "^2.1.0",
@@ -38,6 +39,8 @@
         "zustand": "^4.3.9"
     },
     "devDependencies": {
-        "prettier": "3.0.0"
+        "@typechain/ethers-v5": "^11.1.1",
+        "prettier": "3.0.0",
+        "typechain": "^8.3.1"
     }
 }

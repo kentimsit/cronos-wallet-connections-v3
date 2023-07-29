@@ -1,86 +1,70 @@
 "use client";
-import React from "react";
-import { Box, Text, VStack } from "@chakra-ui/react";
+import React, { useMemo } from "react";
+import { HStack, Image, Spacer, Text, VStack } from "@chakra-ui/react";
 
 import { getNetwork } from "@/app/chains";
-import { currentWallet } from "@/app/wallets";
+import { currentWallet, getWalletConfig } from "@/app/wallets";
 import { ReadChain } from "./ReadChain";
 import { WriteChain } from "./WriteChain";
+import { Address } from "./Address";
 
-const {
-    useWalletName,
-    connect,
-    autoConnect,
-    disconnect,
-
-    useIsConnecting,
-    useIsConnected,
-
-    useAccount,
-    useChainId,
-    useBalance,
-    useEnsName,
-} = currentWallet;
+const { useWalletName, useIsConnected, useAccount, useChainId, useEnsName } =
+    currentWallet;
 
 export function Welcome() {
-    const [mounted, setMounted] = React.useState(false);
     const walletName = useWalletName();
     const isConnected = useIsConnected();
     const chainId = useChainId();
     const account = useAccount();
     const ensName = useEnsName(getNetwork(chainId));
-    const balance = useBalance();
 
-    React.useEffect(() => setMounted(true), []);
-    if (!mounted) return <></>;
+    const walletStatus = useMemo(() => {
+        if (isConnected) {
+            const walletConfig = getWalletConfig(walletName);
 
-    const WalletComponent = () => {
-        if (isConnected && account && balance) {
-            let ensNameText = ensName ? `(${ensName})` : "";
-            if (ensNameText === "undefined") ensNameText = "";
             return (
-                <VStack spacing={3} align="left">
-                    <Text fontSize="xl" color="black" align="left">
-                        Wallet connected: {walletName}
-                    </Text>
-                    <Text fontSize="xl" color="black" align="left">
-                        Chain ID: {chainId}
-                    </Text>
-                    <Text fontSize="xl" color="black" align="left">
-                        Wallet address: {account} {ensNameText}
-                    </Text>
-                </VStack>
-            );
-        } else {
-            return (
-                <VStack spacing={3} align="left">
-                    <Text fontSize="xl" color="black" align="left">
-                        No wallet information yet.
-                    </Text>
-                    <Text fontSize="xl" color="black" align="left">
-                        Please log in.
-                    </Text>
+                <VStack
+                    gap={3}
+                    fontSize="xl"
+                    color="black"
+                    alignItems="flex-start"
+                >
+                    <HStack gap={2} fontSize="xl">
+                        <Image
+                            w={6}
+                            h={6}
+                            src={walletConfig.icon}
+                            alt={walletName}
+                        />
+                        <Text>{walletName}</Text>
+                    </HStack>
+                    <Text>Chain ID: {chainId}</Text>
+                    <HStack>
+                        <Text>Wallet address:</Text>
+                        <Address address={account as string} />
+                        <Text>{ensName && `(${ensName})`}</Text>
+                    </HStack>
                 </VStack>
             );
         }
-    };
+
+        return (
+            <VStack gap={3} alignItems="flex-start" fontSize="xl" color="black">
+                <Text>No wallet information yet.</Text>
+                <Text>Please log in.</Text>
+            </VStack>
+        );
+    }, [isConnected, account, chainId, ensName, walletName]);
 
     return (
-        <div>
-            <Box m={5}>
-                <Text fontSize="4xl" color="black">
-                    Web3 Wallet Connection Demo
-                </Text>
-            </Box>
-            <Box w="100%" m={5}>
-                <WalletComponent />
-            </Box>
-            <Box w="100%" m={5}>
-                <ReadChain />
-            </Box>
-            <Box m={5}>
-                <WriteChain />
-            </Box>
-        </div>
+        <VStack m={5} gap={5} alignItems="flex-start">
+            <Text as="h1" fontSize="4xl" color="black">
+                Web3 Wallet Connection Demo
+            </Text>
+            {walletStatus}
+            <ReadChain />
+            <Spacer />
+            <WriteChain />
+        </VStack>
     );
 }
