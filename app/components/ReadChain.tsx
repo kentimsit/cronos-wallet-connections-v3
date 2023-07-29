@@ -6,14 +6,18 @@ import { useEffect, useState } from "react";
 import { currentWallet } from "../wallets";
 import { Crc20__factory } from "@/contracts/types";
 import { Loading } from "./Loading";
+import { isSupportedChainId } from "../chains";
+import { useJsonRpcProvider } from "../hooks/useJsonRpcProvider";
+import { useContractAddress } from "../hooks/useContractAddress";
 
-const { useIsConnected, useAccount } = currentWallet;
+const { useIsConnected, useAccount, useChainId } = currentWallet;
 
 function parseAndRoundDecimal(decimalString: string) {
     let number = parseFloat(decimalString);
     if (isNaN(number)) {
         return "0.00";
     }
+
     return number.toFixed(2);
 }
 
@@ -22,29 +26,27 @@ export function ReadChain() {
     const readDataAction = useStore((state) => state.setReadData);
     const isConnected = useIsConnected();
     const account = useAccount();
+    const chainId = useChainId();
     const [isLoaded, setIsLoaded] = useState(false);
+    const jsonRpcProvider = useJsonRpcProvider();
+    const usdcAddress = useContractAddress("USDC");
 
     useEffect(() => {
         let canceled = false;
 
         async function readData() {
-            if (!isConnected || isLoaded) return;
-
-            const backendBlockchainProvider =
-                new ethers.providers.JsonRpcProvider(
-                    process.env.NEXT_PUBLIC_BLOCKCHAIN_URL as string,
-                );
+            if (!isConnected || !isSupportedChainId(chainId)) return;
 
             const usdcContract = Crc20__factory.connect(
-                "0xc21223249CA28397B4B6541dfFaEcC539BfF0c59",
-                backendBlockchainProvider,
+                usdcAddress,
+                jsonRpcProvider,
             );
 
             try {
                 const [blockNumber, croBalanceBN, usdcBalanceBN] =
                     await Promise.all([
-                        backendBlockchainProvider.getBlockNumber(),
-                        backendBlockchainProvider.getBalance(account as string),
+                        jsonRpcProvider.getBlockNumber(),
+                        jsonRpcProvider.getBalance(account as string),
                         usdcContract.balanceOf(account as string),
                     ]);
 
@@ -75,7 +77,15 @@ export function ReadChain() {
         return () => {
             canceled = true;
         };
-    }, [isLoaded, isConnected, account, readDataAction]);
+    }, [
+        jsonRpcProvider,
+        usdcAddress,
+        isLoaded,
+        isConnected,
+        account,
+        readDataAction,
+        chainId,
+    ]);
 
     if (!isLoaded) return <Loading />;
 

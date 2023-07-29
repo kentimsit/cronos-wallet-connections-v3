@@ -16,21 +16,21 @@ import { WalletName } from "@web3-wallet/react";
 import { useCallback, useEffect, useMemo } from "react";
 import { currentWallet, walletConfigs } from "../wallets";
 import { getAddChainParameters } from "../chains";
-import { MetaMask } from "@web3-wallet/metamask";
 
-const { connectAsCurrentWallet, autoConnect } = currentWallet;
+const { connectAsCurrentWallet, autoConnect, useChainId } = currentWallet;
 
 export function WalletModal({ isOpen, onClose }: Omit<ModalProps, "children">) {
+    const chainId = useChainId();
     const toast = useToast();
 
     const changeWallet = useCallback(
         async (newWalletName: WalletName) => {
+            onClose();
             try {
                 await connectAsCurrentWallet(
                     newWalletName,
-                    getAddChainParameters(25),
+                    getAddChainParameters(chainId),
                 );
-                onClose();
             } catch (e: unknown) {
                 toast({
                     position: "top",
@@ -40,7 +40,7 @@ export function WalletModal({ isOpen, onClose }: Omit<ModalProps, "children">) {
                 });
             }
         },
-        [onClose, toast],
+        [chainId, onClose, toast],
     );
 
     useEffect(() => {
@@ -54,7 +54,7 @@ export function WalletModal({ isOpen, onClose }: Omit<ModalProps, "children">) {
                     <Button
                         key={walletName}
                         onClick={() => {
-                            changeWallet(MetaMask.walletName);
+                            changeWallet(walletName);
                         }}
                         bg={"blue.100"}
                         color={"black"}

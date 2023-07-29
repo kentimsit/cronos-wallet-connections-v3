@@ -2,11 +2,12 @@
 import React, { useMemo } from "react";
 import { HStack, Image, Spacer, Text, VStack } from "@chakra-ui/react";
 
-import { getNetwork } from "@/app/chains";
+import { getNetwork, isSupportedChainId } from "@/app/chains";
 import { currentWallet, getWalletConfig } from "@/app/wallets";
 import { ReadChain } from "./ReadChain";
 import { WriteChain } from "./WriteChain";
-import { Address } from "./Address";
+import { ShortAddress } from "./ShortAddress";
+import { WrongChainAlert } from "./WrongChainAlert";
 
 const { useWalletName, useIsConnected, useAccount, useChainId, useEnsName } =
     currentWallet;
@@ -17,6 +18,11 @@ export function Welcome() {
     const chainId = useChainId();
     const account = useAccount();
     const ensName = useEnsName(getNetwork(chainId));
+    // check if wallet connected to a supported chain
+    const isSupportedChain = useMemo(
+        () => isSupportedChainId(chainId),
+        [chainId],
+    );
 
     const walletStatus = useMemo(() => {
         if (isConnected) {
@@ -41,7 +47,7 @@ export function Welcome() {
                     <Text>Chain ID: {chainId}</Text>
                     <HStack>
                         <Text>Wallet address:</Text>
-                        <Address address={account as string} />
+                        <ShortAddress address={account as string} />
                         <Text>{ensName && `(${ensName})`}</Text>
                     </HStack>
                 </VStack>
@@ -62,9 +68,14 @@ export function Welcome() {
                 Web3 Wallet Connection Demo
             </Text>
             {walletStatus}
-            <ReadChain />
-            <Spacer />
-            <WriteChain />
+            {isSupportedChain && (
+                <>
+                    <ReadChain />
+                    <Spacer />
+                    <WriteChain />
+                </>
+            )}
+            {isConnected && !isSupportedChain && <WrongChainAlert />}
         </VStack>
     );
 }

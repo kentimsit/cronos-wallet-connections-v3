@@ -7,6 +7,7 @@ import { useCallback, useState } from "react";
 import { Crc20__factory } from "@/contracts/types";
 import { Loading } from "./Loading";
 import { TransactionLink } from "./TransactionLink";
+import { useContractAddress } from "../hooks/useContractAddress";
 
 const { useIsConnected, useAccount, useProvider } = currentWallet;
 
@@ -20,6 +21,7 @@ export function WriteChain() {
     const web3Provider = useProvider();
     const [isCroTxLoading, setIsCroTxLoading] = useState(false);
     const [isUsdcTxLoading, setIsUsdcTxLoading] = useState(false);
+    const usdcAddress = useContractAddress("USDC");
     const isLoading = isCroTxLoading || isUsdcTxLoading;
     const toast = useToast();
 
@@ -61,7 +63,7 @@ export function WriteChain() {
             setIsUsdcTxLoading(true);
 
             const usdcContractWithSigner = Crc20__factory.connect(
-                "0xc21223249CA28397B4B6541dfFaEcC539BfF0c59",
+                usdcAddress,
                 signer,
             );
 
@@ -88,7 +90,7 @@ export function WriteChain() {
         } finally {
             setIsUsdcTxLoading(false);
         }
-    }, [web3Provider, account, toast, lastTransactionHashAction]);
+    }, [web3Provider, account, usdcAddress, toast, lastTransactionHashAction]);
 
     // return early if not connected to wallet
     if (!isConnected) return null;
@@ -96,26 +98,18 @@ export function WriteChain() {
     return (
         <VStack gap={3} alignItems="flex-start">
             <Button
+                colorScheme="blue"
+                size="md"
                 isLoading={isCroTxLoading}
                 onClick={handleCroTx}
-                bg={"blue.400"}
-                color={"white"}
-                _hover={{
-                    bg: "blue.500",
-                }}
-                size="md"
             >
                 Transfer 1 CRO to myself
             </Button>
             <Button
+                size="md"
                 isLoading={isUsdcTxLoading}
                 onClick={handleUsdcTx}
-                bg={"blue.400"}
-                color={"white"}
-                _hover={{
-                    bg: "blue.500",
-                }}
-                size="md"
+                colorScheme="blue"
             >
                 Transfer 1 USDC to myself
             </Button>

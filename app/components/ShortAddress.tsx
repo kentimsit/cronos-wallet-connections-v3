@@ -8,20 +8,20 @@ import { Text } from "@chakra-ui/react";
  * @param param.tailingChars how many leading chars to display, default to 4
  * @param param.isExpanded if true, will display the full address, default to false
  */
-export type AddressProps = {
+export type ShortAddressProps = {
     address: string;
     leadingChars?: number;
     tailingChars?: number;
     isExpanded?: boolean;
 } & TextProps;
 
-export function Address({
+export function ShortAddress({
     address,
     leadingChars = 6,
     tailingChars = 4,
     isExpanded = false,
     ...rest
-}: AddressProps) {
+}: ShortAddressProps) {
     if (!address) return null;
     if (isExpanded) return <Text {...rest}>{address}</Text>;
 

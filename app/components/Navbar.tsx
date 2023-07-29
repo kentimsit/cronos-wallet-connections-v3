@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { getNetwork } from "@/app/chains";
 import { currentWallet } from "@/app/wallets";
-import { Address } from "./Address";
+import { ShortAddress } from "./ShortAddress";
 import { WalletModal } from "./WalletModal";
 
 const { disconnect, useChainId, useIsConnected, useAccount, useEnsName } =
@@ -19,8 +19,8 @@ const { disconnect, useChainId, useIsConnected, useAccount, useEnsName } =
 export function Navbar() {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const isConnected = useIsConnected();
-    const chainId = useChainId();
     const account = useAccount();
+    const chainId = useChainId();
     const ensName = useEnsName(getNetwork(chainId));
 
     return (
@@ -44,29 +44,20 @@ export function Navbar() {
                     </Box>
                     {isConnected && (
                         <Button
+                            colorScheme="blue"
                             onClick={() => {
                                 disconnect();
-                            }}
-                            bg={"blue.400"}
-                            color={"white"}
-                            _hover={{
-                                bg: "blue.500",
                             }}
                         >
                             Log out
                         </Button>
                     )}
                 </HStack>
-                <Button
-                    onClick={onOpen}
-                    bg={"blue.400"}
-                    color={"white"}
-                    _hover={{
-                        bg: "blue.500",
-                    }}
-                >
+                <Button onClick={onOpen} colorScheme="blue">
                     {isConnected &&
-                        (ensName || <Address address={account as string} />)}
+                        (ensName || (
+                            <ShortAddress address={account as string} />
+                        ))}
                     {!isConnected && "Login"}
                 </Button>
             </Flex>
