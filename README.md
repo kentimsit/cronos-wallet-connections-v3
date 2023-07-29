@@ -14,7 +14,6 @@ Project creation:
 
 -   Use Typescript with NextJS 13 app.
 -   Use ESLint.
--   Use Tailwind CSS in our Next app.
 -   We will not be using the src directory
 -   We will definitely use the App Router with NextJS 13
 -   Change the import alias to @
