@@ -6,7 +6,8 @@
         "dev": "next dev -p 3000",
         "build": "next build",
         "start": "next start",
-        "lint": "next lint"
+        "lint": "next lint",
+        "typechain": "typechain --out-dir contracts/types --target ethers-v5 'contracts/abis/*.json'"
     },
     "dependencies": {
         "@chakra-ui/icons": "^2.1.0",
@@ -19,7 +20,7 @@
         "@types/react-dom": "18.2.7",
         "@web3-wallet/defiwallet": "^2.4.1",
         "@web3-wallet/metamask": "^2.4.1",
-        "@web3-wallet/react": "^2.4.1",
+        "@web3-wallet/react": "^2.5.0",
         "@web3-wallet/trust-wallet": "^2.4.1",
         "@web3-wallet/walletconnect": "^3.0.1",
         "@web3modal/ethereum": "^2.7.0",
@@ -32,14 +33,14 @@
         "next": "13.4.12",
         "next-auth": "^4.22.3",
         "pino-pretty": "^10.2.0",
-        "postcss": "8.4.27",
         "react": "18.2.0",
         "react-dom": "18.2.0",
-        "tailwindcss": "3.3.3",
         "typescript": "5.1.6",
         "zustand": "^4.3.9"
     },
     "devDependencies": {
-        "prettier": "3.0.0"
+        "@typechain/ethers-v5": "^11.1.1",
+        "prettier": "3.0.0",
+        "typechain": "^8.3.1"
     }
 }
