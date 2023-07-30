@@ -36,6 +36,8 @@ Then, install and configure:
 -   [Web3 Wallet](https://web3-wallet.github.io/web3-wallet/docs/getting-started)
 -   [TypeChain](https://github.com/dethcrypto/TypeChain) TypeScript bindings for your smart contracts
 
+Web3 Wallet is an open-source wrapper developed especially to simplify the workflow of Cronos app developers, but it also supports other EVM compatible networks.
+
 Then, create or update the /app directory.
 
 ## Env variables
