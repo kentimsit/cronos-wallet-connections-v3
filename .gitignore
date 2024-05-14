@@ -6,7 +6,7 @@
 .env.local
 .env.json
 .idea
-
+temp/
 
 # dependencies
 /node_modules

@@ -12,7 +12,7 @@ import {
     VStack,
     useToast,
 } from "@chakra-ui/react";
-import { WalletName } from "@web3-wallet/react";
+import { WalletName } from "@react-web3-wallet/react";
 import { useCallback, useEffect, useMemo } from "react";
 import { currentWallet, walletConfigs } from "../wallets";
 import { getAddChainParameters } from "../chains";

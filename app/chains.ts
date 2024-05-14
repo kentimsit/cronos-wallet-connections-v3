@@ -1,5 +1,4 @@
-import type { Network } from "@ethersproject/providers";
-import type { AddEthereumChainParameter } from "@web3-wallet/react";
+import type { AddEthereumChainParameter } from "@react-web3-wallet/react";
 
 /**
  * Add the chains supported by your dApp to this enum and
@@ -8,6 +7,12 @@ import type { AddEthereumChainParameter } from "@web3-wallet/react";
 export enum ChainId {
     CronosMainnet = 25,
     CronosTestnet = 338,
+}
+
+interface Network {
+    chainId: ChainId;
+    name: string;
+    ensAddress: string;
 }
 
 /**

@@ -4,10 +4,11 @@ import { Button, useToast, VStack } from "@chakra-ui/react";
 import useStore from "@/app/store/store";
 import { currentWallet } from "../wallets";
 import { useCallback, useState } from "react";
-import { Crc20__factory } from "@/contracts/types";
 import { Loading } from "./Loading";
 import { TransactionLink } from "./TransactionLink";
 import { useContractAddress } from "../hooks/useContractAddress";
+
+import crc20Abi from "../../contracts/abis/Crc20.json";
 
 const { useIsConnected, useAccount, useProvider } = currentWallet;
 
@@ -28,13 +29,14 @@ export function WriteChain() {
     // `handleCro` tx can only be triggered when you are connected to wallet.
     // And we can web3Provider, signer, and account is for sure available.
     const handleCroTx = useCallback(async () => {
-        const signer = web3Provider?.getSigner() as Signer;
+        const signer =
+                    (await web3Provider?.getSigner()) as unknown as Signer;
         try {
             setIsCroTxLoading(true);
 
             const txResponse = await signer.sendTransaction({
                 to: account as string,
-                value: ethers.utils.parseEther("1"),
+                value: ethers.parseEther("1"),
             });
 
             const receipt = await txResponse.wait();
@@ -44,8 +46,8 @@ export function WriteChain() {
                 status: "success",
                 description: "You just sent 1 CRO to yourself",
             });
-
-            lastTransactionHashAction(receipt.transactionHash);
+            if (receipt) {
+            lastTransactionHashAction(receipt.hash);}
         } catch (e: unknown) {
             toast({
                 position: "top",
@@ -58,18 +60,25 @@ export function WriteChain() {
     }, [web3Provider, account, toast, lastTransactionHashAction]);
 
     const handleUsdcTx = useCallback(async () => {
-        const signer = web3Provider?.getSigner() as Signer;
+        const signer =
+                    (await web3Provider?.getSigner()) as unknown as Signer;
         try {
             setIsUsdcTxLoading(true);
 
-            const usdcContractWithSigner = Crc20__factory.connect(
+            // const usdcContractWithSigner = Crc20__factory.connect(
+            //     usdcAddress,
+            //     signer,
+            // );
+
+            const usdcContractWithSigner = new ethers.Contract(
                 usdcAddress,
+                crc20Abi,
                 signer,
             );
 
             const txResponse = await usdcContractWithSigner.transfer(
                 account as string,
-                ethers.utils.parseUnits("1", 6),
+                ethers.parseUnits("1", 6),
             );
 
             const receipt = await txResponse.wait();
@@ -80,7 +89,8 @@ export function WriteChain() {
                 description: "You just sent 1 USDC to yourself",
             });
 
-            lastTransactionHashAction(receipt.transactionHash);
+            if (receipt) {
+                lastTransactionHashAction(receipt.hash);}
         } catch (e: unknown) {
             toast({
                 position: "top",

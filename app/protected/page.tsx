@@ -4,7 +4,7 @@
 import { signOut } from "next-auth/react";
 import React from "react";
 
-import { Flex, Stack, Text, Box, Button } from "@chakra-ui/react";
+import { Flex, Stack, Text } from "@chakra-ui/react";
 
 export default function ProtectedPage() {
     const [mounted, setMounted] = React.useState(false);

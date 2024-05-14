@@ -4,11 +4,12 @@ import { VStack, Text } from "@chakra-ui/react";
 import useStore from "@/app/store/store";
 import { useEffect, useState } from "react";
 import { currentWallet } from "../wallets";
-import { Crc20__factory } from "@/contracts/types";
 import { Loading } from "./Loading";
 import { isSupportedChainId } from "../chains";
 import { useJsonRpcProvider } from "../hooks/useJsonRpcProvider";
 import { useContractAddress } from "../hooks/useContractAddress";
+
+import crc20Abi from "../../contracts/abis/Crc20.json";
 
 const { useIsConnected, useAccount, useChainId } = currentWallet;
 
@@ -37,8 +38,14 @@ export function ReadChain() {
         async function readData() {
             if (!isConnected || !isSupportedChainId(chainId)) return;
 
-            const usdcContract = Crc20__factory.connect(
+            // const usdcContract = Crc20__factory.connect(
+            //     usdcAddress,
+            //     jsonRpcProvider,
+            // );
+
+            const usdcContract = new ethers.Contract(
                 usdcAddress,
+                crc20Abi,
                 jsonRpcProvider,
             );
 
@@ -50,11 +57,11 @@ export function ReadChain() {
                         usdcContract.balanceOf(account as string),
                     ]);
 
-                const croBalance = ethers.utils.formatEther(
+                const croBalance = ethers.formatEther(
                     croBalanceBN.toString(),
                 );
 
-                const usdcBalance = ethers.utils.formatUnits(
+                const usdcBalance = ethers.formatUnits(
                     usdcBalanceBN.toString(),
                     6,
                 );
