@@ -1,10 +1,10 @@
 import { rpcMap } from "./chains";
-import { MetaMask } from "@web3-wallet/metamask";
-import { DeFiWallet } from "@web3-wallet/defiwallet";
-import { TrustWallet } from "@web3-wallet/trust-wallet";
-import { WalletConnect } from "@web3-wallet/walletconnect";
-import type { Connector, WalletName } from "@web3-wallet/react";
-import { createCurrentWallet } from "@web3-wallet/react";
+import { MetaMask } from "@react-web3-wallet/metamask";
+import { DeFiWallet } from "@react-web3-wallet/defiwallet";
+import { TrustWallet } from "@react-web3-wallet/trust-wallet";
+import { WalletConnect } from "@react-web3-wallet/walletconnect";
+import type { Connector, WalletName } from "@react-web3-wallet/react";
+import { createCurrentWallet } from "@react-web3-wallet/react";
 
 export type WalletConfig = {
     walletName: WalletName;

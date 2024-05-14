@@ -1,16 +1,16 @@
 import { useMemo } from "react";
 import { getChainConfig } from "../chains";
 import { currentWallet } from "../wallets";
-import { providers } from "ethers";
+import { ethers } from "ethers";
 
-export const useJsonRpcProvider = (): providers.StaticJsonRpcProvider => {
+export const useJsonRpcProvider = (): ethers.JsonRpcProvider => {
     const walletChainId = currentWallet.useChainId();
     const { chainName, ensAddress, rpcUrls, chainId } =
         getChainConfig(walletChainId);
     const rpcUrl = rpcUrls[0];
 
     return useMemo(() => {
-        return new providers.StaticJsonRpcProvider(rpcUrl, {
+        return new ethers.JsonRpcProvider(rpcUrl, {
             name: chainName,
             chainId,
             ensAddress,
